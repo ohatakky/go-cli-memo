@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-cli-memo/models"
 	"go-cli-memo/unknown"
+	"log"
 
 	"github.com/urfave/cli"
 )
@@ -16,15 +17,29 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 	handler := &CliUnknownHandler{
 		Uu: uu,
 	}
-	app.Name = "unknown"
-	app.Usage = "get unknown list"
 	app.Action = func(c *cli.Context) error {
-		// TODO : 4コマンド実装。場合分けする。
-		u, err := handler.get()
-		for _, v := range u {
-			fmt.Println(*v)
+		if len(c.Args()) > 2 || len(c.Args()) == 0 {
+			log.Fatal("arguments error")
 		}
-		return err
+
+		if c.Args()[0] != "unknown" && c.Args()[0] != "understand" {
+			log.Fatal("arguments error")
+		}
+
+		switch len(c.Args()) {
+		case 1:
+			u, err := handler.get()
+			for _, v := range u {
+				fmt.Println(v.Word)
+			}
+			if err != nil {
+				return err
+			}
+		case 2:
+			// unknown store()
+			// return err
+		}
+		return nil
 	}
 }
 
