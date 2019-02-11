@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_unknownRepo "go-cli-memo/unknown/repository"
+	_unknownUsecase "go-cli-memo/unknown/usecase"
 	"log"
 	"os"
 
@@ -31,10 +32,10 @@ func main() {
 	defer db.Close()
 
 	unknownRepo := _unknownRepo.NewMysqlUnknownRepository(db)
-	res, err := unknownRepo.Get()
+	unknownUsecase := _unknownUsecase.NewUnknownUsecase(unknownRepo)
+	res, err := unknownUsecase.Get()
 	for _, v := range res {
 		fmt.Println(*v)
 	}
-	// unknownUse := _unknownUcase.NewUnknownUsecase(unknownRepo)
 	// TODO : Delievery
 }

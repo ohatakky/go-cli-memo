@@ -13,7 +13,7 @@ func NewUnknownUsecase(uk unknown.Repository) unknown.Usecase {
 	return &unknownUsecase{unknownRepo: uk}
 }
 
-func (uk *unknownUsecase) Get() (*models.Unknown, error) {
+func (uk *unknownUsecase) Get() ([]*models.Unknown, error) {
 
 	res, err := uk.unknownRepo.Get()
 	if err != nil {
