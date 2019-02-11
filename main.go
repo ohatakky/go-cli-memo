@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	_unknownCliDeliver "go-cli-memo/unknown/delivery/cli"
 	_unknownRepo "go-cli-memo/unknown/repository"
 	_unknownUsecase "go-cli-memo/unknown/usecase"
 	"log"
@@ -10,6 +11,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
+	"github.com/urfave/cli"
 )
 
 func init() {
@@ -33,9 +35,9 @@ func main() {
 
 	unknownRepo := _unknownRepo.NewMysqlUnknownRepository(db)
 	unknownUsecase := _unknownUsecase.NewUnknownUsecase(unknownRepo)
-	res, err := unknownUsecase.Get()
-	for _, v := range res {
-		fmt.Println(*v)
-	}
+
 	// TODO : Delievery
+	app := cli.NewApp()
+	_unknownCliDeliver.NewUnknownCliHandler(app, unknownUsecase)
+	app.Run(os.Args)
 }
