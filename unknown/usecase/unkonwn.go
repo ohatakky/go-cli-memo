@@ -22,3 +22,13 @@ func (uu *unknownUsecase) Get() ([]*models.Unknown, error) {
 
 	return res, nil
 }
+
+func (uu *unknownUsecase) Store(u *models.Unknown) error {
+
+	err := uu.unknownRepo.Store(u)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

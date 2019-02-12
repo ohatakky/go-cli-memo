@@ -36,8 +36,10 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 				return err
 			}
 		case 2:
-			// unknown store()
-			// return err
+			var u models.Unknown
+			u.Word = c.Args()[1]
+			err := handler.store(&u)
+			return err
 		}
 		return nil
 	}
@@ -51,4 +53,13 @@ func (h *CliUnknownHandler) get() ([]*models.Unknown, error) {
 	}
 
 	return unknown, nil
+}
+
+func (h *CliUnknownHandler) store(u *models.Unknown) error {
+	err := h.ukUse.Store(u)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
