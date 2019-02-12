@@ -4,5 +4,5 @@ import "go-cli-memo/models"
 
 type Repository interface {
 	Get() ([]*models.Unknown, error)
-	// Store()
+	Store(u *models.Unknown) error
 }

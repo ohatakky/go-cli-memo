@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"go-cli-memo/models"
 	"go-cli-memo/unknown"
 
@@ -38,5 +39,15 @@ func (mr *mysqlUnknownRepository) Get() ([]*models.Unknown, error) {
 		panic(err.Error())
 	}
 
-	return result, nil
+	return result, err
+}
+
+func (mr *mysqlUnknownRepository) Store(u *models.Unknown) error {
+	insert_query := fmt.Sprintf("INSERT INTO unknown (Word) VALUES('%s')", u.Word)
+	_, err := mr.Conn.Exec(insert_query)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return err
 }
