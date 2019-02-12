@@ -9,13 +9,13 @@ type unknownUsecase struct {
 	unknownRepo unknown.Repository
 }
 
-func NewUnknownUsecase(uk unknown.Repository) unknown.Usecase {
-	return &unknownUsecase{unknownRepo: uk}
+func NewUnknownUsecase(ukRepo unknown.Repository) unknown.Usecase {
+	return &unknownUsecase{unknownRepo: ukRepo}
 }
 
-func (uk *unknownUsecase) Get() ([]*models.Unknown, error) {
+func (uu *unknownUsecase) Get() ([]*models.Unknown, error) {
 
-	res, err := uk.unknownRepo.Get()
+	res, err := uu.unknownRepo.Get()
 	if err != nil {
 		return nil, err
 	}

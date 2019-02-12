@@ -17,8 +17,8 @@ func NewMysqlUnknownRepository(Conn *sql.DB) unknown.Repository {
 	return &mysqlUnknownRepository{Conn}
 }
 
-func (m *mysqlUnknownRepository) Get() ([]*models.Unknown, error) {
-	rows, err := m.Conn.Query("SELECT * FROM unknown")
+func (mr *mysqlUnknownRepository) Get() ([]*models.Unknown, error) {
+	rows, err := mr.Conn.Query("SELECT * FROM unknown")
 	if err != nil {
 		panic(err.Error())
 	}

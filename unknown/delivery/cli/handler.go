@@ -10,12 +10,12 @@ import (
 )
 
 type CliUnknownHandler struct {
-	Uu unknown.Usecase
+	ukUse unknown.Usecase
 }
 
 func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 	handler := &CliUnknownHandler{
-		Uu: uu,
+		ukUse: uu,
 	}
 	app.Action = func(c *cli.Context) error {
 		if len(c.Args()) > 2 || len(c.Args()) == 0 {
@@ -45,7 +45,7 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 
 func (h *CliUnknownHandler) get() ([]*models.Unknown, error) {
 
-	unknown, err := h.Uu.Get()
+	unknown, err := h.ukUse.Get()
 	if err != nil {
 		return nil, err
 	}
