@@ -4,7 +4,7 @@
 
 わかったら意味と一緒にメモ。
 
-ができるCLI。
+をするCLI。
 
 
 1. CLでわからない単語を入力すると、unknown(table)に保存
@@ -12,9 +12,11 @@
 2. メモしておいたわからない単語を取得
 > unknown
 3. わかったら単語と意味を入力
-> understand GraphQL hogehoge 
+> know GraphQL hogehoge 
 4. わかっていることを取得
-> understand
+> know
+5. わかっている単語の意味を取得
+> know GraphQL
 
 
 
