@@ -8,6 +8,7 @@ import (
 	_unknownUsecase "go-cli-memo/unknown/usecase"
 	"log"
 	"os"
+	"path/filepath"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
@@ -15,7 +16,11 @@ import (
 )
 
 func init() {
-	env_err := godotenv.Load()
+	abs_path, err := filepath.Abs(".")
+	if err != nil {
+		log.Fatal(err)
+	}
+	env_err := godotenv.Load(fmt.Sprintf("%s/.env", abs_path))
 	if env_err != nil {
 		log.Fatal("Error loading .env file")
 	}

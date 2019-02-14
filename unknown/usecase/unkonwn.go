@@ -32,3 +32,23 @@ func (uu *unknownUsecase) Store(u *models.Unknown) error {
 
 	return nil
 }
+
+func (uu *unknownUsecase) Update(u1, u2 *models.Unknown) error {
+
+	err := uu.unknownRepo.Update(u1, u2)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (uu *unknownUsecase) Delete(u *models.Unknown) error {
+
+	err := uu.unknownRepo.Delete(u)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -22,7 +22,7 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 			log.Fatal("arguments error")
 		}
 
-		if c.Args()[0] != "unknown" && c.Args()[0] != "understand" {
+		if c.Args()[0] != "unknown" {
 			log.Fatal("arguments error")
 		}
 
@@ -41,6 +41,7 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 			err := handler.store(&u)
 			return err
 		}
+
 		return nil
 	}
 }

@@ -43,8 +43,28 @@ func (mr *mysqlUnknownRepository) Get() ([]*models.Unknown, error) {
 }
 
 func (mr *mysqlUnknownRepository) Store(u *models.Unknown) error {
-	insert_query := fmt.Sprintf("INSERT INTO unknown (Word) VALUES('%s')", u.Word)
-	_, err := mr.Conn.Exec(insert_query)
+	query := fmt.Sprintf("INSERT INTO unknown (Word) VALUES('%s')", u.Word)
+	_, err := mr.Conn.Exec(query)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return err
+}
+
+func (mr *mysqlUnknownRepository) Update(u1, u2 *models.Unknown) error {
+	query := fmt.Sprintf("UPDATE unknown SET Word = '%s' where Word = '%s'", u2.Word, u1.Word)
+	_, err := mr.Conn.Exec(query)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return err
+}
+
+func (mr *mysqlUnknownRepository) Delete(u *models.Unknown) error {
+	query := fmt.Sprintf("DELETE FROM unknown WHERE Word = '%s'", u.Word)
+	_, err := mr.Conn.Exec(query)
 	if err != nil {
 		panic(err.Error())
 	}
