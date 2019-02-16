@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go-cli-memo/models"
 	"go-cli-memo/unknown"
-	"log"
 
 	"github.com/urfave/cli"
 )
@@ -17,17 +16,20 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 	handler := &CliUnknownHandler{
 		ukUse: uu,
 	}
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "update, u",
+			Usage: "update unknown word",
+		},
+		cli.BoolFlag{
+			Name:  "delete, d",
+			Usage: "delete unknown word",
+		},
+	}
+
 	app.Action = func(c *cli.Context) error {
-		if len(c.Args()) > 2 || len(c.Args()) == 0 {
-			log.Fatal("arguments error")
-		}
-
-		if c.Args()[0] != "unknown" {
-			log.Fatal("arguments error")
-		}
-
 		switch len(c.Args()) {
-		case 1:
+		case 0: // ex.) unknown xxx
 			u, err := handler.get()
 			for _, v := range u {
 				fmt.Println(v.Word)
@@ -35,11 +37,33 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 			if err != nil {
 				return err
 			}
-		case 2:
+		case 1: // ex.) unknown xxx yyyyy
 			var u models.Unknown
-			u.Word = c.Args()[1]
+			u.Word = c.Args()[0]
 			err := handler.store(&u)
-			return err
+			if err != nil {
+				return err
+			}
+		case 2: // ex.) --delete xxx -d
+			if c.Bool("d") {
+				var u models.Unknown
+				u.Word = c.Args()[0]
+				err := handler.delete(&u)
+				if err != nil {
+					return err
+				}
+				return nil
+			} // ex.) --update xxx yyy -u
+		case 3:
+			if c.Bool("u") {
+				var u1, u2 models.Unknown
+				u1.Word = c.Args()[0]
+				u2.Word = c.Args()[1]
+				err := handler.update(&u1, &u2)
+				if err != nil {
+					return err
+				}
+			}
 		}
 
 		return nil
@@ -58,6 +82,24 @@ func (h *CliUnknownHandler) get() ([]*models.Unknown, error) {
 
 func (h *CliUnknownHandler) store(u *models.Unknown) error {
 	err := h.ukUse.Store(u)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (h *CliUnknownHandler) update(u1 *models.Unknown, u2 *models.Unknown) error {
+	err := h.ukUse.Update(u1, u2)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (h *CliUnknownHandler) delete(u *models.Unknown) error {
+	err := h.ukUse.Delete(u)
 	if err != nil {
 		return err
 	}
