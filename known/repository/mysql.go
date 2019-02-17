@@ -31,7 +31,7 @@ func (mr *mysqlKnownRepository) Get() ([]*models.Known, error) {
 		if err != nil {
 			panic(err.Error())
 		}
-
+		fmt.Println(k)
 		result = append(result, &k)
 	}
 	if err = rows.Err(); err != nil {

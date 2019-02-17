@@ -4,6 +4,7 @@ import (
 	"go-cli-memo/known"
 	"go-cli-memo/models"
 	"go-cli-memo/unknown"
+	"log"
 )
 
 type knownUsecase struct {
@@ -29,17 +30,20 @@ func (ku *knownUsecase) Get() ([]*models.Known, error) {
 }
 
 func (ku *knownUsecase) Store(k *models.Known) error {
+	// TODO : トランザクション張る。
+	var u = models.Unknown{Word: k.Word}
+	n, err2 := ku.unknownRepo.Delete(&u)
 
-	// TODO : トランザクション張る
+	if err2 != nil {
+		return err2
+	}
+	if n == 0 { // delete件数が0ならreturn
+		log.Fatal("該当するunknownなし")
+	}
+
 	err := ku.knownRepo.Store(k)
 	if err != nil {
 		return err
-	}
-
-	var u = models.Unknown{Word: k.Word}
-	err2 := ku.unknownRepo.Delete(&u)
-	if err2 != nil {
-		return err2
 	}
 
 	return nil
@@ -47,6 +51,15 @@ func (ku *knownUsecase) Store(k *models.Known) error {
 
 func (ku *knownUsecase) Update(k *models.Known) error {
 	err := ku.knownRepo.Update(k)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ku *knownUsecase) Delete(k *models.Known) error {
+	err := ku.knownRepo.Delete(k)
 	if err != nil {
 		return err
 	}
