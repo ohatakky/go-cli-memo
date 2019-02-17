@@ -41,6 +41,8 @@ func main() {
 	unknownRepo := _unknownRepo.NewMysqlUnknownRepository(db)
 	unknownUsecase := _unknownUsecase.NewUnknownUsecase(unknownRepo)
 
+	// knownRepo := _knownRepo.NewMysqlKnownRepository(db)
+
 	app := cli.NewApp()
 	_unknownCliDeliver.NewUnknownCliHandler(app, unknownUsecase)
 	app.Run(os.Args)
