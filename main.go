@@ -3,6 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	_knownCliDeliver "go-cli-memo/known/delivery/cli"
+	_knownRepo "go-cli-memo/known/repository"
+	_knownUsecase "go-cli-memo/known/usecase"
 	_unknownCliDeliver "go-cli-memo/unknown/delivery/cli"
 	_unknownRepo "go-cli-memo/unknown/repository"
 	_unknownUsecase "go-cli-memo/unknown/usecase"
@@ -39,12 +42,13 @@ func main() {
 	defer db.Close()
 
 	unknownRepo := _unknownRepo.NewMysqlUnknownRepository(db)
+	knownRepo := _knownRepo.NewMysqlKnownRepository(db)
+
 	unknownUsecase := _unknownUsecase.NewUnknownUsecase(unknownRepo)
+	knownUsecase := _knownUsecase.NewKnownUsecase(knownRepo, unknownRepo)
 
-	// knownRepo := _knownRepo.NewMysqlKnownRepository(db)
-	// knownUsecase := _knownUsecase.NewKnownUsecase(knownRepo, unknownRepo)
-
-	app := cli.NewApp()
+	app := cli.NewApp() // CLIパッケージ
 	_unknownCliDeliver.NewUnknownCliHandler(app, unknownUsecase)
+	_knownCliDeliver.NewKnownCliHandler(app, knownUsecase)
 	app.Run(os.Args)
 }
