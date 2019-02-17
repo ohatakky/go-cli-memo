@@ -19,10 +19,6 @@
 5. わかっている単語の意味を取得
 > know GraphQL
 
-## 不明点
-
-.envを参照できないため、以下のようにalias設定して、パスによらずCLIを実行できるようにしている。.envを参照する方法が知りたい。
-> alias unknown='(cd /Users/xxx/go/bin/; ./go-cli-memo unknown)'
 
 
 
