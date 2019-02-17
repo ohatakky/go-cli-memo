@@ -44,3 +44,12 @@ func (ku *knownUsecase) Store(k *models.Known) error {
 
 	return nil
 }
+
+func (ku *knownUsecase) Update(k *models.Known) error {
+	err := ku.knownRepo.Update(k)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
