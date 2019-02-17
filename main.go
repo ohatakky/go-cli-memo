@@ -15,7 +15,6 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"github.com/urfave/cli"
 )
 
 func init() {
@@ -47,8 +46,6 @@ func main() {
 	unknownUsecase := _unknownUsecase.NewUnknownUsecase(unknownRepo)
 	knownUsecase := _knownUsecase.NewKnownUsecase(knownRepo, unknownRepo)
 
-	app := cli.NewApp() // CLIパッケージ
-	_unknownCliDeliver.NewUnknownCliHandler(app, unknownUsecase)
-	_knownCliDeliver.NewKnownCliHandler(app, knownUsecase)
-	app.Run(os.Args)
+	_unknownCliDeliver.NewUnknownCliHandler(unknownUsecase)
+	_knownCliDeliver.NewKnownCliHandler(knownUsecase)
 }

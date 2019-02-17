@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-cli-memo/models"
 	"go-cli-memo/unknown"
+	"os"
 
 	"github.com/urfave/cli"
 )
@@ -12,10 +13,11 @@ type CliUnknownHandler struct {
 	ukUse unknown.Usecase
 }
 
-func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
+func NewUnknownCliHandler(uu unknown.Usecase) {
 	handler := &CliUnknownHandler{
 		ukUse: uu,
 	}
+	app := cli.NewApp()
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "update, u",
@@ -28,8 +30,11 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 	}
 
 	app.Action = func(c *cli.Context) error {
+		if c.Args()[0] != "unknown" {
+			return nil
+		}
 		switch len(c.Args()) {
-		case 0: // ex.) unknown xxx
+		case 1: // ex.) unknown
 			u, err := handler.get()
 			for _, v := range u {
 				fmt.Println(v.Word)
@@ -37,28 +42,28 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 			if err != nil {
 				return err
 			}
-		case 1: // ex.) unknown xxx yyyyy
+		case 2: // ex.) unknown xxx
 			var u models.Unknown
-			u.Word = c.Args()[0]
+			u.Word = c.Args()[1]
 			err := handler.store(&u)
 			if err != nil {
 				return err
 			}
-		case 2: // ex.) --delete xxx -d
+		case 3: // ex.) --delete xxx -d
 			if c.Bool("d") {
 				var u models.Unknown
-				u.Word = c.Args()[0]
+				u.Word = c.Args()[1]
 				err := handler.delete(&u)
 				if err != nil {
 					return err
 				}
 				return nil
 			} // ex.) --update xxx yyy -u
-		case 3:
+		case 4:
 			if c.Bool("u") {
 				var u1, u2 models.Unknown
-				u1.Word = c.Args()[0]
-				u2.Word = c.Args()[1]
+				u1.Word = c.Args()[1]
+				u2.Word = c.Args()[2]
 				err := handler.update(&u1, &u2)
 				if err != nil {
 					return err
@@ -68,6 +73,7 @@ func NewUnknownCliHandler(app *cli.App, uu unknown.Usecase) {
 
 		return nil
 	}
+	app.Run(os.Args)
 }
 
 func (h *CliUnknownHandler) get() ([]*models.Unknown, error) {

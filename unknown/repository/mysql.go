@@ -32,7 +32,6 @@ func (mr *mysqlUnknownRepository) Get() ([]*models.Unknown, error) {
 		if err != nil {
 			panic(err.Error())
 		}
-		fmt.Println(uk)
 		result = append(result, &uk)
 	}
 	if err = rows.Err(); err != nil {
