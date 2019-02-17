@@ -45,7 +45,7 @@ func (uu *unknownUsecase) Update(u1, u2 *models.Unknown) error {
 
 func (uu *unknownUsecase) Delete(u *models.Unknown) error {
 
-	err := uu.unknownRepo.Delete(u)
+	_, err := uu.unknownRepo.Delete(u)
 	if err != nil {
 		return err
 	}

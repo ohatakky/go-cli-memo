@@ -32,7 +32,7 @@ func (mr *mysqlUnknownRepository) Get() ([]*models.Unknown, error) {
 		if err != nil {
 			panic(err.Error())
 		}
-
+		fmt.Println(uk)
 		result = append(result, &uk)
 	}
 	if err = rows.Err(); err != nil {
@@ -62,12 +62,16 @@ func (mr *mysqlUnknownRepository) Update(u1, u2 *models.Unknown) error {
 	return err
 }
 
-func (mr *mysqlUnknownRepository) Delete(u *models.Unknown) error {
+func (mr *mysqlUnknownRepository) Delete(u *models.Unknown) (int64, error) {
 	query := fmt.Sprintf("DELETE FROM unknown WHERE Word = '%s'", u.Word)
-	_, err := mr.Conn.Exec(query)
+	result, err := mr.Conn.Exec(query)
+	if err != nil {
+		panic(err.Error())
+	}
+	n, err := result.RowsAffected()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	return err
+	return n, err
 }
