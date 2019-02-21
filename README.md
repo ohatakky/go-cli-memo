@@ -1,24 +1,32 @@
 # go-cli-memo
-## 概要
+## Overview
+我流のメモをCLIで。
+
 わからない単語をメモ。
 
-わかったら意味と一緒にメモ。
+後日わかったら意味と一緒にメモ。
 
-をするCLI。
+## Usage
 
-## 使い方
-
-1. CLでわからない単語を入力すると、unknown(table)に保存
-> unknown graphql
+1. わからない単語をメモ
+> $ unknown りんご
 2. メモしておいたわからない単語を取得
-> unknown
-3. わかったら単語と意味を入力
-> know GraphQL hogehoge 
-4. わかっていることを取得
-> know
-5. わかっている単語の意味を取得
-> know GraphQL
+> $ unknown
 
+> \> りんご
+3. わかったら単語と意味をメモ
+> $ known りんご 赤い果物 
+4. メモしておいたわかっている単語と意味を取得
+> $ known
 
+> \> りんご 赤い果物
 
+5. 更新
+> $ unknown --update りんご みかん -u
 
+> $ known --update りんご 赤くて甘い果物 -u
+
+6. 削除
+> $ unknown --delete りんご -d
+
+> $ known --delete りんご -d
