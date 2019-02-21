@@ -18,60 +18,63 @@ func NewUnknownCliHandler(uu unknown.Usecase) {
 		ukUse: uu,
 	}
 	app := cli.NewApp()
-	app.Flags = []cli.Flag{
-		cli.BoolFlag{
-			Name:  "update, u",
-			Usage: "update unknown word",
-		},
-		cli.BoolFlag{
-			Name:  "delete, d",
-			Usage: "delete unknown word",
-		},
-	}
-
-	app.Action = func(c *cli.Context) error {
-		if c.Args()[0] != "unknown" {
-			return nil
-		}
-		switch len(c.Args()) {
-		case 1: // ex.) unknown
-			u, err := handler.get()
-			for _, v := range u {
-				fmt.Println(v.Word)
-			}
-			if err != nil {
-				return err
-			}
-		case 2: // ex.) unknown xxx
-			var u models.Unknown
-			u.Word = c.Args()[1]
-			err := handler.store(&u)
-			if err != nil {
-				return err
-			}
-		case 3: // ex.) --delete xxx -d
-			if c.Bool("d") {
-				var u models.Unknown
-				u.Word = c.Args()[1]
-				err := handler.delete(&u)
-				if err != nil {
-					return err
+	app.Commands = []cli.Command{
+		{
+			Name:  "unknown",
+			Usage: "unknown CRUD",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "update, u",
+					Usage: "update unknown word",
+				},
+				cli.BoolFlag{
+					Name:  "delete, d",
+					Usage: "delete unknown word",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				fmt.Println(len(c.Args()))
+				fmt.Println(c.Bool("d"))
+				switch len(c.Args()) {
+				case 0: // ex.) unknown
+					u, err := handler.get()
+					for _, v := range u {
+						fmt.Println(v.Word)
+					}
+					if err != nil {
+						return err
+					}
+				case 1: // ex.) unknown xxx
+					var u models.Unknown
+					u.Word = c.Args()[0]
+					err := handler.store(&u)
+					if err != nil {
+						return err
+					}
+				case 2: // ex.) --delete xxx -d
+					if c.Bool("d") {
+						var u models.Unknown
+						u.Word = c.Args()[0]
+						err := handler.delete(&u)
+						if err != nil {
+							return err
+						}
+						return nil
+					} // ex.) --update xxx yyy -u or --update xxx -u yyy
+				case 3:
+					if c.Bool("u") {
+						var u1, u2 models.Unknown
+						u1.Word = c.Args()[0]
+						u2.Word = c.Args()[2]
+						err := handler.update(&u1, &u2)
+						if err != nil {
+							return err
+						}
+					}
 				}
 				return nil
-			} // ex.) --update xxx yyy -u
-		case 4:
-			if c.Bool("u") {
-				var u1, u2 models.Unknown
-				u1.Word = c.Args()[1]
-				u2.Word = c.Args()[2]
-				err := handler.update(&u1, &u2)
-				if err != nil {
-					return err
-				}
-			}
-		}
-
-		return nil
+			},
+		},
 	}
 	app.Run(os.Args)
 }
