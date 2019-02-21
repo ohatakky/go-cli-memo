@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-cli-memo/models"
 	"go-cli-memo/unknown"
+	"log"
 	"os"
 
 	"github.com/urfave/cli"
@@ -33,8 +34,6 @@ func NewUnknownCliHandler(uu unknown.Usecase) {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				fmt.Println(len(c.Args()))
-				fmt.Println(c.Bool("d"))
 				switch len(c.Args()) {
 				case 0: // ex.) unknown
 					u, err := handler.get()
@@ -76,7 +75,13 @@ func NewUnknownCliHandler(uu unknown.Usecase) {
 			},
 		},
 	}
-	app.Run(os.Args)
+
+	app.CommandNotFound = func(ctx *cli.Context, command string) {}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (h *CliUnknownHandler) get() ([]*models.Unknown, error) {

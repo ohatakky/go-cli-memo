@@ -18,42 +18,48 @@ func NewKnownCliHandler(ku known.Usecase) {
 		kUse: ku,
 	}
 	app := cli.NewApp()
-	app.Flags = []cli.Flag{
-		cli.BoolFlag{
-			Name:  "update, u",
-			Usage: "update known word",
+	app.Commands = []cli.Command{
+		{
+			Name:  "known",
+			Usage: "known CRUD",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "update, u",
+					Usage: "update known word",
+				},
+			},
+			Action: func(c *cli.Context) error {
+				switch len(c.Args()) {
+				case 0:
+					k, err := handler.get()
+					for _, v := range k {
+						fmt.Println(v.Word, v.Description)
+					}
+					if err != nil {
+						return err
+					}
+				case 2:
+					var k = models.Known{Word: c.Args()[0], Description: c.Args()[1]}
+					err := handler.store(&k)
+					if err != nil {
+						return err
+					}
+				case 3:
+					if c.Bool("u") {
+						var k = models.Known{Word: c.Args()[0], Description: c.Args()[2]}
+						err := handler.update(&k)
+						if err != nil {
+							return err
+						}
+					}
+				}
+				return nil
+			},
 		},
 	}
-	app.Action = func(c *cli.Context) error {
-		if c.Args()[0] != "known" {
-			return nil
-		}
-		switch len(c.Args()) {
-		case 1:
-			k, err := handler.get()
-			for _, v := range k {
-				fmt.Println(v.Word, v.Description)
-			}
-			if err != nil {
-				return err
-			}
-		case 3:
-			var k = models.Known{Word: c.Args()[1], Description: c.Args()[2]}
-			err := handler.store(&k)
-			if err != nil {
-				return err
-			}
-		case 4:
-			if c.Bool("u") {
-				var k = models.Known{Word: c.Args()[1], Description: c.Args()[2]}
-				err := handler.update(&k)
-				if err != nil {
-					return err
-				}
-			}
-		}
-		return nil
-	}
+
+	app.CommandNotFound = func(ctx *cli.Context, command string) {}
+
 	app.Run(os.Args)
 }
 
