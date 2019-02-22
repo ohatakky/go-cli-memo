@@ -1,6 +1,6 @@
 # go-cli-memo
 ## Overview
-我流のメモをCLIで。
+メモをCLIで。
 
 わからない単語をメモ。
 
